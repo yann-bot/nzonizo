@@ -6,7 +6,7 @@ import AvisClient from "@/ui/avisClient";
 import Footer from "@/composants/footer";
 export default function Home() {
   return (
-    <main className="flex flex-col gap-15 select-none touch-none">
+    <main className="flex flex-col gap-15 overflow-x-hidden">
       <section>
          <Header />
          <Hero />
