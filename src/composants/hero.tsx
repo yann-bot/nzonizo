@@ -12,9 +12,9 @@ export default function Hero(){
             </div>
             <div className="md:mt-10 w-full md:w-2/3 flex flex-col md:flex-row gap-2 justify-center">
             <SearchForm  />
-            <Link href="/Recherche" className="w-full md:w-auto">
+            <Link href="/recherche" className="w-full md:w-auto">
                 <button className="w-full md:w-auto border p-2 bg-orange-500 text-white hover:bg-orange-700">
-                Rechercher
+                     Rechercher
                 </button>
             </Link>
             </div>
