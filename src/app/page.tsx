@@ -16,10 +16,7 @@ export default function Home() {
           <HowItWorks/>
           <AvisClient/>
       </section>
-    
       <Footer />
-
-  
     </main>
   )
 }

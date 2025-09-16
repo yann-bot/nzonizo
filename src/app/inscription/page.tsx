@@ -34,7 +34,6 @@ export default function RegisterForm() {
 
         {/* Séparateur */}
         <div className="text-center text-gray-500 mt-2">ou</div>
-
         {/* Connexion via Google / téléphone */}
         <section className="flex flex-col gap-2">
           <button type="button" className="bg-gray-300 flex items-center justify-center p-4 rounded-2xl hover:bg-gray-400">
