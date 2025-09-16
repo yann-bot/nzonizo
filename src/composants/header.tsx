@@ -39,7 +39,7 @@ export default function Header() {
                         {/* Liens */}
                         <nav className="flex flex-col gap-6 text-center">
                             <Link href="/devenirTechnicien" onClick={() => setIsOpen(false)}   className="text-2xl font-serif text-black border border-gray-300 px-6 py-3 hover:bg-orange-500 hover:text-white"> Devenir technicien</Link>
-                            <Link href="#" onClick={() => setIsOpen(false)} className="text-2xl font-serif text-black border border-gray-300 px-6 py-3 hover:bg-orange-500 hover:text-white">Se connecter </Link>
+                            <Link href="/connexion" className="text-2xl font-serif text-black border border-gray-300 px-6 py-3 hover:bg-orange-500 hover:text-white">Se connecter </Link>
                         </nav>
                     </div>
                 )}

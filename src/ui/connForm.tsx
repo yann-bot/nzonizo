@@ -1,4 +1,5 @@
 
+"use client";
 
 import Link from "next/link";
 import { FaX } from "react-icons/fa6";
@@ -6,55 +7,75 @@ import { FcGoogle } from "react-icons/fc";
 import { FaPhoneAlt } from "react-icons/fa";
 
 type FormProps = {
-    setShow: (value: boolean) => void;
+  setShow: (value: boolean) => void;
 };
 
 export default function Form({ setShow }: FormProps) {
-    return (
-        <div className=" text-black fixed my-3 top-30 left-1/2 -translate-x-1/2 z-50 px-4 shadow-2xl rounded-2xl container flex flex-col w-fit bg-white">
-            <div className="">
-                <button onClick={() => setShow(false)} className="p-2 pt-6 text-black">
-                    <FaX />
-                </button>
-            </div>
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+      <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 text-black relative">
+        {/* Bouton fermer */}
+        <button
+          onClick={() => setShow(false)}
+          className="absolute top-3 right-3 text-black p-2"
+        >
+          <FaX />
+        </button>
 
-            <form className="flex flex-col w-100 gap-3 m-15 mt-20 mb-20">
-                <h2 className="text-xl text-black font-bold mb-4 self-center">Connectez-vous</h2>
-                <section className="flex flex-col gap-2">
-                    <input
-                        type="texte"
-                        id="email"
-                        placeholder="User name"
-                        className="p-4 rounded-2xl bg-gray-200"
-                    />
-                     <input
-                        type="password"
-                        id="usename"
-                        placeholder="Password"
-                        className="p-4 rounded-2xl bg-gray-200"
-                    />
-                    <button type="submit" className="bg-orange-500  p-4 rounded-2xl">
-                        Connexion
-                    </button>
-                </section>
-                <div className="text-center">ou</div>
-                <section className="flex flex-col gap-2">
-                    <button type="button" className="bg-gray-300 flex items-center p-4 rounded-2xl">
-                        <FcGoogle className="w-10 mr-15" />
-                        <span className="">Connexion avec Google</span>
-                    </button>
-                    <button type="button" className="bg-gray-300  flex items-center p-4 rounded-2xl">
-                        <FaPhoneAlt className="w-10 mr-15" />
-                        <span>Connexion avec Numéro</span>
-                    </button>
-                </section>
-                <section className="flex flex-col items-center mt-4">
-                    <p>Vous n&#39;avez pas encore de compte ?</p>
-                    <Link href="#" className="text-blue-500 underline">
-                        Inscrivez-vous
-                    </Link>
-                </section>
-            </form>
-        </div>
-    );
+        {/* Formulaire */}
+        <form className="flex flex-col gap-3">
+          <h2 className="text-xl text-black font-bold mb-4 self-center">
+            Connectez-vous
+          </h2>
+
+          <section className="flex flex-col gap-2">
+            <input
+              type="text"
+              id="email"
+              placeholder="User name"
+              className="p-4 rounded-2xl bg-gray-200 w-full"
+            />
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              className="p-4 rounded-2xl bg-gray-200 w-full"
+            />
+            <button
+              type="submit"
+              className="bg-orange-500 p-4 rounded-2xl text-white font-bold hover:bg-orange-600 w-full"
+            >
+              Connexion
+            </button>
+          </section>
+
+          <div className="text-center text-gray-500 mt-2">ou</div>
+
+          <section className="flex flex-col gap-2">
+            <button
+              type="button"
+              className="bg-gray-300 flex items-center justify-center p-4 rounded-2xl hover:bg-gray-400 w-full"
+            >
+              <FcGoogle className="w-6 h-6 mr-3" />
+              <span>Connexion avec Google</span>
+            </button>
+            <button
+              type="button"
+              className="bg-gray-300 flex items-center justify-center p-4 rounded-2xl hover:bg-gray-400 w-full"
+            >
+              <FaPhoneAlt className="w-5 h-5 mr-3" />
+              <span>Connexion avec Numéro</span>
+            </button>
+          </section>
+
+          <section className="flex flex-col items-center mt-4">
+            <p>Vous n’avez pas encore de compte ?</p>
+            <Link href="/inscription" className="text-blue-500 underline">
+              Inscrivez-vous
+            </Link>
+          </section>
+        </form>
+      </div>
+    </div>
+  );
 }
