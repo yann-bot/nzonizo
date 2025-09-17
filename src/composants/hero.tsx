@@ -1,6 +1,5 @@
 
 import SearchForm from '@/ui/formRecherche'
-import Link from "next/link"
 import ServicesCarousel from '@/ui/serviceCarousel'
 
 export default function Hero(){

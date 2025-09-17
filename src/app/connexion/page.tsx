@@ -62,7 +62,7 @@ export default function Form() {
         setPassword("");
         setErrors({});
     
-      } catch (error) {
+      } catch {
         setErrors({ submit: "Une erreur s'est produite lors de la connexion" });
       } finally {
         setIsSubmitting(false);

@@ -90,7 +90,7 @@ export default function Form({ setShow }: FormProps) {
         
         // Fermer la modal après soumission réussie
         setShow(false);
-      } catch (error) {
+      } catch {
         setErrors({ submit: "Une erreur s'est produite lors de la connexion" });
       } finally {
         setIsSubmitting(false);
@@ -234,7 +234,7 @@ export default function Form({ setShow }: FormProps) {
           </section>
 
           <section className="flex flex-col items-center mt-4">
-            <p>Vous n'avez pas encore de compte ?</p>
+            <p>Vous n&apos;avez pas encore de compte ?</p>
             <Link 
               href="/inscription" 
               className="text-blue-500 underline hover:text-blue-700"
