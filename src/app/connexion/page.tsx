@@ -1,44 +1,172 @@
 "use client";
 
 import Link from "next/link";
-import { FaX } from "react-icons/fa6";
+import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { FaPhoneAlt } from "react-icons/fa";
+import { FaPhoneAlt, FaEye, FaEyeSlash } from "react-icons/fa";
 
 
+
+
+
+type FormErrors = {
+  username?: string;
+  password?: string;
+  submit?: string;
+};
 
 export default function Form() {
+  const [username , setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
+
+    const validate = (name: string, pass: string): FormErrors => {
+    const newErrors: FormErrors = {};
+
+    if (!name.trim()) {
+      newErrors.username = "Le nom d'utilisateur est requis";
+    } else if (name.length < 3) {
+      newErrors.username = "Le nom d'utilisateur doit contenir au moins trois caractères";
+    }
+
+    if (!pass.trim()) {
+      newErrors.password = "Mot de passe requis";
+    } else if (pass.length < 6) {
+      newErrors.password = "Le mot de passe doit contenir au moins six caractères";
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit =  async (e: React.FormEvent) => {
+      e.preventDefault();
+
+      const validationErrors = validate(username, password);
+    setErrors(validationErrors);
+
+    const hasErrors = Object.values(validationErrors).some((v) => v !== undefined);
+    if (!hasErrors) {
+      setIsSubmitting(true);
+      
+      try {
+        // Simulation d'appel API
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        
+        // Ici, vous devriez envoyer les données à votre API
+        console.log("Formulaire valide ✅", { username });
+        
+        // Réinitialisation du formulaire
+        setUserName("");
+        setPassword("");
+        setErrors({});
+    
+      } catch (error) {
+        setErrors({ submit: "Une erreur s'est produite lors de la connexion" });
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
+
+  }
+  
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
       <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 text-black relative">
         
-
         {/* Formulaire */}
-        <form className="flex flex-col gap-3">
+        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <h2 className="text-xl text-black font-bold mb-4 self-center">
             Connectez-vous
           </h2>
 
+          
           <section className="flex flex-col gap-2">
-            <input
-              type="text"
-              id="email"
-              placeholder="User name"
-              className="p-4 rounded-2xl bg-gray-200 w-full"
-            />
-            <input
-              type="password"
-              id="password"
-              placeholder="Password"
-              className="p-4 rounded-2xl bg-gray-200 w-full"
-            />
+            <div>
+            
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => {
+                  setUserName(e.target.value);
+                  // Effacer l'erreur quand l'utilisateur modifie le champ
+                  if (errors.username) {
+                    setErrors({ ...errors, username: undefined });
+                  }
+                }}
+                id="username"
+                name="username"
+                placeholder="Votre nom d'utilisateur"
+                className="p-4 rounded-2xl bg-gray-200 w-full border-transparent focus:border-orange-500 focus:ring-0"
+                disabled={isSubmitting}
+                aria-invalid={errors.username ? "true" : "false"}
+                aria-describedby={errors.username ? "username-error" : undefined}
+              />
+              {errors.username && (
+                <p id="username-error" className="text-red-500 text-sm mt-1" role="alert">
+                  {errors.username}
+                </p>
+              )}
+            </div>
+
+            <div>
+            
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    // Effacer l'erreur quand l'utilisateur modifie le champ
+                    if (errors.password) {
+                      setErrors({ ...errors, password: undefined });
+                    }
+                  }}
+                  id="password"
+                  name="password"
+                  placeholder="Votre mot de passe"
+                  className="p-4 rounded-2xl bg-gray-200 w-full border-transparent focus:border-orange-500 focus:ring-0 pr-12"
+                  disabled={isSubmitting}
+                  aria-invalid={errors.password ? "true" : "false"}
+                  aria-describedby={errors.password ? "password-error" : undefined}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Masquer   le mot de passe" : "Afficher le mot de passe"}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+              {errors.password && (
+                <p id="password-error" className="text-red-500 text-sm mt-1" role="alert">
+                  {errors.password}
+                </p>
+              )}
+            </div>
+
             <button
               type="submit"
-              className="bg-orange-500 p-4 rounded-2xl text-white font-bold hover:bg-orange-600 w-full"
+              disabled={isSubmitting}
+              className="bg-orange-500 p-4 rounded-2xl text-white font-bold hover:bg-orange-600 w-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
-              Connexion
+              {isSubmitting ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Connexion en cours...
+                </>
+              ) : (
+                "Connexion"
+              )}
             </button>
           </section>
+
 
           <div className="text-center text-gray-500 mt-2">ou</div>
 

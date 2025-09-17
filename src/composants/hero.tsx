@@ -12,11 +12,7 @@ export default function Hero(){
             </div>
             <div className="md:mt-10 w-full md:w-2/3 flex flex-col md:flex-row gap-2 justify-center">
             <SearchForm  />
-            <Link href="/recherche" className="w-full md:w-auto">
-                <button className="w-full md:w-auto border p-2 bg-orange-500 text-white hover:bg-orange-700">
-                     Rechercher
-                </button>
-            </Link>
+            
             </div>
              <div className=" rounded-2xl w-2/3 mt-10 ">
                     <ServicesCarousel />
