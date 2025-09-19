@@ -21,7 +21,7 @@ export default function RegisterForm() {
 
 
     
-  // Gestion de la soumission
+
  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
