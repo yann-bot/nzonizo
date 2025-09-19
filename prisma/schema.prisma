@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Utilisateur {
+  id               String      @id @default(uuid())
+  nom              String
+  email            String?     @unique
+  telephone        String      @unique
+  password_hash    String
+  role             Role
+  date_inscription DateTime    @default(now())
+  Avis             Avis[]
+  Technicien       Technicien?
+}
+
+model Technicien {
+  id                String                 @id
+  statut_en_ligne   Boolean                @default(false)
+  note_moyenne      Float                  @default(0)
+  experience_annees Int?
+  bio               String?
+  Avis              Avis[]
+  user              Utilisateur            @relation(fields: [id], references: [id])
+  Specialites       TechnicienSpecialite[]
+  Zones             TechnicienZone[]
+}
+
+model Zone {
+  id          String           @id @default(uuid())
+  nom         String           @unique
+  geo_meta    Json?
+  Techniciens TechnicienZone[]
+}
+
+model Specialite {
+  id          String                 @id @default(uuid())
+  nom         String                 @unique
+  description String?
+  Techniciens TechnicienSpecialite[]
+}
+
+model TechnicienZone {
+  technicienId String
+  zoneId       String
+  technicien   Technicien @relation(fields: [technicienId], references: [id])
+  zone         Zone       @relation(fields: [zoneId], references: [id])
+
+  @@id([technicienId, zoneId])
+}
+
+model TechnicienSpecialite {
+  technicienId String
+  specialiteId String
+  specialite   Specialite @relation(fields: [specialiteId], references: [id])
+  technicien   Technicien @relation(fields: [technicienId], references: [id])
+
+  @@id([technicienId, specialiteId])
+}
+
+model Avis {
+  id           String      @id @default(uuid())
+  note         Int
+  commentaire  String?
+  date_avis    DateTime    @default(now())
+  clientId     String
+  technicienId String
+  client       Utilisateur @relation(fields: [clientId], references: [id])
+  technicien   Technicien  @relation(fields: [technicienId], references: [id])
+}
+
+enum Role {
+  CLIENT
+  TECHNICIEN
+  ADMIN
+}
