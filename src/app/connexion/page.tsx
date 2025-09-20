@@ -98,7 +98,7 @@ export default function Form() {
                 }}
                 id="username"
                 name="username"
-                placeholder="Votre nom d'utilisateur"
+                placeholder="Non d'utilisateur/Email"
                 className="p-4 rounded-2xl bg-gray-200 w-full border-transparent focus:border-orange-500 focus:ring-0"
                 disabled={isSubmitting}
                 aria-invalid={errors.username ? "true" : "false"}
