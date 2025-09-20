@@ -57,9 +57,7 @@ export async function POST(req: Request){
          }
 
        return NextResponse.json({err:"Erreur interne du serveur"}, {status:501})
-
-
-  }
+   }
 
 
 }
