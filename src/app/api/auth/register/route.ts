@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       data: {
         nom:fullname,
         email,
-        telephone:phone,
+        telephone:phone,  
         password_hash,
         role: "CLIENT", 
       },

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaPhoneAlt, FaEye, FaEyeSlash } from "react-icons/fa";
-
+import {useRouter} from "next/navigation";
 
 
 
@@ -21,7 +21,7 @@ export default function Form() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
-
+   const router = useRouter();
     const validate = (name: string, pass: string): FormErrors => {
     const newErrors: FormErrors = {};
 
@@ -42,34 +42,38 @@ export default function Form() {
 
   const handleSubmit =  async (e: React.FormEvent) => {
       e.preventDefault();
-
       const validationErrors = validate(username, password);
-    setErrors(validationErrors);
-
-    const hasErrors = Object.values(validationErrors).some((v) => v !== undefined);
-    if (!hasErrors) {
+      setErrors(validationErrors);
+      const hasErrors = Object.values(validationErrors).some((v) => v !== undefined);
+      if (!hasErrors) {
       setIsSubmitting(true);
+      const postObject = {
+            method: "POST",
+            headers: {"Content-type": "Application/json"},
+            body: JSON.stringify({username, password}),
+      }
       
       try {
-        // Simulation d'appel API
-        await new Promise((resolve) => setTimeout(resolve, 2000));
         
-        // Ici, vous devriez envoyer les données à votre API
-        console.log("Formulaire valide ✅", { username });
-        
-        // Réinitialisation du formulaire
-        setUserName("");
-        setPassword("");
-        setErrors({});
-    
+          const res = await fetch("/api/auth/conn", postObject )
+           if(res.ok) {
+              alert("Connexion réussie ✅")
+              setUserName("");
+              setPassword("");
+              setErrors({});
+              router.push("/")
+              console.log("utilisteur connecter")
+      
+           }
       } catch {
         setErrors({ submit: "Une erreur s'est produite lors de la connexion" });
       } finally {
         setIsSubmitting(false);
       }
     }
+}
 
-  }
+  
   
 
   return (
@@ -85,7 +89,6 @@ export default function Form() {
           
           <section className="flex flex-col gap-2">
             <div>
-            
               <input
                 type="text"
                 value={username}

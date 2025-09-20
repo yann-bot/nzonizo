@@ -30,7 +30,7 @@ export default function RegisterForm() {
 
     const hasErrors = Object.values(validationErrors).some((v) => v !== undefined);
     if (!hasErrors) {
-      setIsSubmitting(true);
+    setIsSubmitting(true);
      
 
       const postObject = {
@@ -40,7 +40,7 @@ export default function RegisterForm() {
       };
 
      try {
-          const res = await fetch("/api/auth", postObject )
+          const res = await fetch("/api/auth/register", postObject )
           if(res.ok) {
               alert("Inscription réussie ✅")
               // Reset du formulaire
