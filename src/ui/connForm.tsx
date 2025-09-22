@@ -5,10 +5,12 @@ import Link from "next/link";
 import { FaX } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { FaPhoneAlt, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useState, useRef, useEffect } from "react";
-
+import React, { useState, useRef, useEffect } from "react";
+import {handleSubmitCon} from "@/app/utils/handleSubmitCon";
+import {useAuth} from "@/context/authContext";
+import {useRouter} from "next/navigation";
 type FormProps = {
-  setShow: (value: boolean) => void;
+  setShowAction: (value: boolean) => void;
 };
 
 type FormErrors = {
@@ -17,25 +19,26 @@ type FormErrors = {
   submit?: string;
 };
 
-export default function Form({ setShow }: FormProps) {
-  const [username, setUsername] = useState("");
+export default function Form({ setShowAction }: FormProps) {
+  const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-
+  const {login} = useAuth();
+  const router = useRouter();
   // Fermer la modal en cliquant à l'extérieur
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        setShow(false);
+        setShowAction(false);
       }
     }
 
     function handleEscapeKey(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        setShow(false);
+        setShowAction(false);
       }
     }
 
@@ -46,57 +49,24 @@ export default function Form({ setShow }: FormProps) {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscapeKey);
     };
-  }, [setShow]);
+  }, [setShowAction]);
 
-  const validate = (name: string, pass: string): FormErrors => {
-    const newErrors: FormErrors = {};
+    const handleSubmit =(e: React.FormEvent) =>  handleSubmitCon(
+        e,
+        username,
+        password,
+        setErrors,
+        setIsSubmitting,
+        (user, token) => {
+            login(user, token);       // stocker le token + user
+            setUserName("");          // reset champs
+            setPassword("");
+            setErrors({});
+            alert("Succes");
+            setShowAction(false);
+        }
+    )
 
-    if (!name.trim()) {
-      newErrors.username = "Le nom d'utilisateur est requis";
-    } else if (name.length < 3) {
-      newErrors.username = "Le nom d'utilisateur doit contenir au moins trois caractères";
-    }
-
-    if (!pass.trim()) {
-      newErrors.password = "Mot de passe requis";
-    } else if (pass.length < 6) {
-      newErrors.password = "Le mot de passe doit contenir au moins six caractères";
-    }
-
-    return newErrors;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const validationErrors = validate(username, password);
-    setErrors(validationErrors);
-
-    const hasErrors = Object.values(validationErrors).some((v) => v !== undefined);
-    if (!hasErrors) {
-      setIsSubmitting(true);
-      
-      try {
-        // Simulation d'appel API
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        
-        // Ici, vous devriez envoyer les données à votre API
-        console.log("Formulaire valide ✅", { username });
-        
-        // Réinitialisation du formulaire
-        setUsername("");
-        setPassword("");
-        setErrors({});
-        
-        // Fermer la modal après soumission réussie
-        setShow(false);
-      } catch {
-        setErrors({ submit: "Une erreur s'est produite lors de la connexion" });
-      } finally {
-        setIsSubmitting(false);
-      }
-    }
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
@@ -109,7 +79,7 @@ export default function Form({ setShow }: FormProps) {
       >
         {/* Bouton fermer */}
         <button
-          onClick={() => setShow(false)}
+          onClick={() => setShowAction(false)}
           className="absolute top-3 right-3 text-black p-2 rounded-full hover:bg-gray-100 transition-colors"
           aria-label="Fermer la fenêtre de connexion"
         >
@@ -135,7 +105,7 @@ export default function Form({ setShow }: FormProps) {
                 type="text"
                 value={username}
                 onChange={(e) => {
-                  setUsername(e.target.value);
+                  setUserName(e.target.value);
                   // Effacer l'erreur quand l'utilisateur modifie le champ
                   if (errors.username) {
                     setErrors({ ...errors, username: undefined });
@@ -238,7 +208,7 @@ export default function Form({ setShow }: FormProps) {
             <Link 
               href="/inscription" 
               className="text-blue-500 underline hover:text-blue-700"
-              onClick={() => setShow(false)}
+              onClick={() => setShowAction(false)}
             >
               Inscrivez-vous
             </Link>

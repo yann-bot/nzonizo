@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import {prisma} from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export async function POST(req: Request){
     try {
@@ -42,12 +43,22 @@ export async function POST(req: Request){
     }
 
     // Authentification réussie → tu peux générer un token JWT ou une session
+        const token = jwt.sign({
+            id: utilisateur.id,
+            email: utilisateur.email,
+            role:utilisateur.role,
+        },
+            process.env.JWT_SECRET_KEY as string ,
+            { expiresIn: '1h' }
+        )
     return NextResponse.json({
       message: "Connexion réussie",
       utilisateur: {
         nom: utilisateur.nom,
         email: utilisateur.email,
-      } })  
+      }, token })
+
+
 
     } catch(err: unknown) {
          if(err instanceof Error) {

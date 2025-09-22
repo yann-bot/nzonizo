@@ -1,19 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState} from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaPhoneAlt, FaEye, FaEyeSlash } from "react-icons/fa";
 import {useRouter} from "next/navigation";
+import {useAuth} from "@/context/authContext"
+import { FormErrors} from '@/app/utils/validationConnexion';
+import {handleSubmitCon} from "@/app/utils/handleSubmitCon";
 
-
-
-
-type FormErrors = {
-  username?: string;
-  password?: string;
-  submit?: string;
-};
 
 export default function Form() {
   const [username , setUserName] = useState("");
@@ -21,57 +16,26 @@ export default function Form() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
-   const router = useRouter();
-    const validate = (name: string, pass: string): FormErrors => {
-    const newErrors: FormErrors = {};
+  const router = useRouter();
+  const {login} = useAuth();
 
-    if (!name.trim()) {
-      newErrors.username = "Le nom d'utilisateur est requis";
-    } else if (name.length < 3) {
-      newErrors.username = "Le nom d'utilisateur doit contenir au moins trois caractères";
-    }
-
-    if (!pass.trim()) {
-      newErrors.password = "Mot de passe requis";
-    } else if (pass.length < 6) {
-      newErrors.password = "Le mot de passe doit contenir au moins six caractères";
-    }
-
-    return newErrors;
-  };
-
-  const handleSubmit =  async (e: React.FormEvent) => {
-      e.preventDefault();
-      const validationErrors = validate(username, password);
-      setErrors(validationErrors);
-      const hasErrors = Object.values(validationErrors).some((v) => v !== undefined);
-      if (!hasErrors) {
-      setIsSubmitting(true);
-      const postObject = {
-            method: "POST",
-            headers: {"Content-type": "Application/json"},
-            body: JSON.stringify({username, password}),
+  const handleSubmit =(e: React.FormEvent) =>  handleSubmitCon(
+      e,
+      username,
+      password,
+      setErrors,
+      setIsSubmitting,
+      (user, token) => {
+          login(user, token);       // stocker le token + user
+          setUserName("");          // reset champs
+          setPassword("");
+          setErrors({});
+          alert("Succes")
+          router.push("/");         // redirection
       }
-      
-      try {
-        
-          const res = await fetch("/api/auth/conn", postObject )
-           if(res.ok) {
-              alert("Connexion réussie ✅")
-              setUserName("");
-              setPassword("");
-              setErrors({});
-              router.push("/")
-              console.log("utilisteur connecter")
-      
-           }
-      } catch {
-        setErrors({ submit: "Une erreur s'est produite lors de la connexion" });
-      } finally {
-        setIsSubmitting(false);
-      }
-    }
-}
+  )
+
+
 
   
   
@@ -86,7 +50,7 @@ export default function Form() {
             Connectez-vous
           </h2>
 
-          
+  
           <section className="flex flex-col gap-2">
             <div>
               <input

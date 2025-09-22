@@ -5,7 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaPhoneAlt } from "react-icons/fa";
 import { useState } from "react";
 import {useRouter} from "next/navigation";
-import {validate, FormErrors} from '@/app/utils/validation'; 
+import {validate, FormErrors} from '@/app/utils/validationInscription';
 
 export default function RegisterForm() {
   // States des champs

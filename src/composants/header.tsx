@@ -23,7 +23,7 @@ export default function Header() {
                 showForm && (
                     <>
                         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40" onClick={() => setShowForm(false)} />
-                        <Form setShow={ setShowForm } />
+                        <Form setShowAction={ setShowForm } />
                     </>
 
                 )
